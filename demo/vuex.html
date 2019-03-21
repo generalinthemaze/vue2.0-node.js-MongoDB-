@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Vuex</title>
+  <script src="../node_modules/vue/dist/vue.js"></script>
+  <script src="../node_modules/vuex/dist/vuex.min.js"></script>
+</head>
+<body>
+<div id="app">
+  <h2>{{msg}}</h2>
+  <a href="javascript:;" @click="add">click</a>
+  <counter ></counter>
+</div>
+<script>
+  //设置counter组件
+  const counter ={
+    template:`<div>
+<div>点击数量：{{count}}</div>
+<div>用户名：{{userName}}</div>
+</div>`,
+    computed:{
+      count(){
+        return this.$store.state.count;
+      },
+      userName(){
+        return this.$store.getters.userName;
+      }
+    }
+  }
+  //设置Vuex
+  const storeVuex =new Vuex.Store({
+    state:{
+      count:10,
+      name:'jack'
+    },
+    mutations: {
+      increment(state, num){
+        return state.count = num;
+      }
+    },
+    actions:{
+      incrementAction(context, num){
+        context.commit("increment", num);
+      }
+    },
+    getters:{
+      userName(state){
+        return state.name + ',Hello'
+      }
+    }
+  });
+  new Vue({
+    el:"#app",
+    store:storeVuex,//在vue中的store属性为Vuex的实例
+    data:{
+      msg:'Vuex的使用'
+    },
+    components: {
+      counter
+    },
+    methods:{
+      add(){
+        this.$store.dispatch('incrementAction', 5)
+      }
+    }
+  })
+</script>
+</body>
+</html>
